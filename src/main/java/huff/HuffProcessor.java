@@ -121,6 +121,18 @@ public class HuffProcessor implements Processor {
         }
     }
 
+    /** 
+     * Helper method for makeCodingsFromTree. Recursive.
+     */
+    private void encode(HuffNode n, String encoding, String[] encStrings) {
+        if (n.value() != -1) {
+            encStrings[n.value()] = encoding;
+            return;
+        }
+        encode(n.left(), encoding + "0", encStrings);
+        encode(n.right(), encoding + "1", encStrings);
+    }
+
     /** Returns an array [0-256] -- note extra space for the EOF character
      * which has a value of 256.  Each position in the array includes a String
      * of 0's and 1's indicating the compressed encoding for the byte.  In
@@ -130,10 +142,10 @@ public class HuffProcessor implements Processor {
      * current encoding is added to the array.*/
 
     private String[] makeCodingsFromTree(HuffNode root) {
-        // TODO: Step 3! You will need to create a helper recursive method
-        return new String[257];
+        String[] ret = new String[257];
+        encode(root,"", ret);
+        return ret;
     }
-
 
     /** Debugging method.
      * Prints the codings of the characters in the array [0-256].
