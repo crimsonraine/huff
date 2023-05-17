@@ -167,8 +167,15 @@ public class HuffProcessor implements Processor {
      * the value stored in the leaf.
      */
     private void writeHeader (HuffNode n, BitOutputStream out)
-    {
-        // TODO: Step 4
+    {   
+        if (n.value() != -1) { // leaf
+            out.writeBits(1, 1);
+            out.writeBits(9, n.value());
+            return;
+        }
+        out.writeBits(1, 0); // internal
+        writeHeader(n.left(), out);
+        writeHeader(n.right(), out);
     }
 
     /** Write the body of the compressed file.  Read through the input stream 8 bits
