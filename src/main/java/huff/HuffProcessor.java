@@ -243,8 +243,25 @@ public class HuffProcessor implements Processor {
      */
     private void readCompressedBits(HuffNode root, BitInputStream in, BitOutputStream out)
     {
-        // TODO: Step 7
+        int bitsRead = in.readBits(1);
+        HuffNode pointer = root;
+        int levels = 0;
+        while (bitsRead != -1) {
+            if (bitsRead == 0) {
+                pointer = pointer.left();
+                levels++;
+            } else {
+                pointer = pointer.right();
+                levels++;
+            }
+            if (pointer.left() == null && pointer.right() == null) {
+                if (pointer.value() == PSEUDO_EOF) return;
+                System.out.println(pointer.value());
+                out.writeBits(levels, pointer.value());
+                levels = 0;
+                pointer = root;
+            }
+            bitsRead = in.readBits(1);
+        }
     }
-
-
 }
