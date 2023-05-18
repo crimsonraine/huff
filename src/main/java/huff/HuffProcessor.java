@@ -224,8 +224,14 @@ public class HuffProcessor implements Processor {
      */
     HuffNode readHeader (BitInputStream in)
     {
-        // TODO: Step 6
-        return new HuffNode (-1, -1);
+        int bitRead = in.readBits(1);
+        if (bitRead == 0) {
+            HuffNode left = readHeader(in);
+            HuffNode right = readHeader(in);
+            return new HuffNode(-1, left.weight() + right.weight(), left, right);
+        }
+        int coding = in.readBits(9);
+        return new HuffNode(coding, -1);
     }
 
     /** Reads the body of the compressed file.  Start at the root of the tree.
