@@ -228,7 +228,7 @@ public class HuffProcessor implements Processor {
         if (bitRead == 0) {
             HuffNode left = readHeader(in);
             HuffNode right = readHeader(in);
-            return new HuffNode(-1, left.weight() + right.weight(), left, right);
+            return new HuffNode(-1, -1, left, right);
         }
         int coding = in.readBits(9);
         return new HuffNode(coding, -1);
@@ -254,9 +254,9 @@ public class HuffProcessor implements Processor {
                 pointer = pointer.right();
                 levels++;
             }
-            if (pointer.left() == null && pointer.right() == null) {
+            if (pointer.isLeaf()) {
                 if (pointer.value() == PSEUDO_EOF) return;
-                System.out.println(pointer.value());
+                System.out.println("" + (char) pointer.value());
                 out.writeBits(levels, pointer.value());
                 levels = 0;
                 pointer = root;
