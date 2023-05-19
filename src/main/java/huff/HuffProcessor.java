@@ -245,20 +245,15 @@ public class HuffProcessor implements Processor {
     {
         int bitsRead = in.readBits(1);
         HuffNode pointer = root;
-        int levels = 0;
         while (bitsRead != -1) {
             if (bitsRead == 0) {
                 pointer = pointer.left();
-                levels++;
             } else {
                 pointer = pointer.right();
-                levels++;
             }
             if (pointer.isLeaf()) {
                 if (pointer.value() == PSEUDO_EOF) return;
-                System.out.println("" + (char) pointer.value());
-                out.writeBits(levels, pointer.value());
-                levels = 0;
+                out.writeBits(8, pointer.value());
                 pointer = root;
             }
             bitsRead = in.readBits(1);
