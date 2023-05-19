@@ -55,19 +55,13 @@ public class HuffProcessor implements Processor {
      * the input file. */
     private int[] readForCounts(BitInputStream in)
     {
-        try {
-            byte[] bList = in.readAllBytes();
-            int[] counts = new int[256];
-            for (byte b : bList) {
-                counts[b]++;
-            }
-            return counts;
+        int[] counts = new int[256];
+        int bitsRead = in.readBits(8);
+        while (bitsRead != -1) {
+            counts[bitsRead]++;
+            bitsRead = in.readBits(8);
         }
-        catch (Exception ex) {
-           System.out.println("Exception caught in readForCounts: " + ex); 
-           // printStackTrace(ex);
-        }
-        return new int[256];
+        return counts;
     }
 
 
